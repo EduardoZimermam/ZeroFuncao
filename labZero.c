@@ -4,43 +4,67 @@
 #include "utils.h"
 #include "ZeroFuncao.h"
 
-int main ()
-{
-	Polinomio p1, p2, p3, p4;
+int main (){
+	Polinomio p;
+	double x0, x1, a, b, raiz, tempo_inic, tempo_final, erro;
+	int it;
 
-	p1.p = malloc(5);
-	p2.p = malloc(6);
-	p3.p = malloc(5);
-	p4.p = malloc(4);
+	printf("Digite o grau do polinômio:\n");
+	scanf("%d", &p.grau);
 
-	p1.p[0] = -15;
-	p1.p[1] = -10;
-	p1.p[2] = 3;
-	p1.p[3] = 4;
-	p1.p[4] = 2;
-	p.grau = 4;
+	p.p = (double*) malloc (sizeof(double*) * (p.grau + 1));
 
-	p2.p[0] = -24;
-	p2.p[1] = -4;
-	p2.p[2] = 22;
-	p2.p[3] = -9;
-	p2.p[4] = -2;
-	p2.p[4] = 1;
-	p.grau = 5;
+	printf("\nDigite os coeficientes do polinômio, iniciando pelo de maior grau, separando por espaços:\n");
+	for(int i = p.grau; i > -1; --i){
+		scanf("%lf", &p.p[i]);
+	}
 
-	p3.p[0] = -30;
-	p3.p[1] = 25;
-	p3.p[2] = 4;
-	p3.p[3] = 2;
-	p3.p[4] = 3;
-	p.grau = 4;
+	printf("\nDigite os parametros x0 e x1, respectivamente, para o método da Secante, separando por espaço:\n");
+	scanf("%lf %lf", &x0, &x1);
 
-	p4.p[0] = 3;
-	p4.p[1] = -1;
-	p4.p[2] = -5;
-	p4.p[3] = 2;
-	p.grau = 3;	
+	printf("\nDigite os parametros a e b, respectivamente, para o método da Bissecção, separando por espaço:\n");
+	scanf("%lf %lf", &a, &b);
 
-  return 0;
+	printf("\n\n");
+
+	printf("|        Metodo         |             Raiz            |              Erro             |   Iterações   |            Tempo             |\n");
+
+	tempo_inic = timestamp();
+	erro = bisseccao_rapido(p, a, b, EPS, &it, &raiz);
+	tempo_final = timestamp();
+
+	printf("|    Bissecção_rapido   |   %.21lf   |    %.21lf    |      %3d      |    %.21lf   |\n", raiz, erro, it, tempo_final - tempo_inic);
+
+	tempo_inic = timestamp();
+	erro = newtonRaphson_rapido(p, x0, EPS, &it, &raiz);
+	tempo_final = timestamp();
+
+	printf("| Newton Raphson_rapido |   %.21lf   |    %.21lf    |      %3d      |    %.21lf   |\n", raiz, erro, it, tempo_final - tempo_inic);
+
+	tempo_inic = timestamp();
+	erro = secante_rapido(p, x0, x1, EPS, &it, &raiz);
+	tempo_final = timestamp();
+
+	printf("|     Secante_rapido    |   %.21lf   |    %.21lf    |      %3d      |    %.21lf   |\n", raiz, erro, it, tempo_final - tempo_inic);
+
+	tempo_inic = timestamp();
+	erro = bisseccao_lento(p, a, b, EPS, &it, &raiz);
+	tempo_final = timestamp();
+
+	printf("|    Bissecção_lento    |   %.21lf   |    %.21lf    |      %3d      |    %.21lf   |\n", raiz, erro, it, tempo_final - tempo_inic);
+
+	tempo_inic = timestamp();
+	erro = newtonRaphson_lento(p, x0, EPS, &it, &raiz);
+	tempo_final = timestamp();
+
+	printf("| Newton Raphson_lento  |   %.21lf   |    %.21lf    |      %3d      |    %.21lf   |\n", raiz, erro, it, tempo_final - tempo_inic);
+
+	tempo_inic = timestamp();
+	erro = secante_lento(p, x0, x1, EPS, &it, &raiz);
+	tempo_final = timestamp();
+
+	printf("|     Secante_lento     |   %.21lf   |    %.21lf    |      %3d      |    %.21lf   |\n", raiz, erro, it, tempo_final - tempo_inic);
+
+ 	return 0;
 }
 
